@@ -3,26 +3,22 @@ import { MapPin, Search, Target, Loader2, Check } from "lucide-react";
 import { useGoogleMaps, LocationResult } from "../hooks/useGoogleMaps";
 
 interface LocationSelectorProps {
-  onLocationSelect: (location: {
-    latitude: number;
-    longitude: number;
-    address?: string;
-  }) => void;
-  initialLatitude?: number;
-  initialLongitude?: number;
+  onLocationSelect: (location: LocationResult) => void;
+  initialLocation?: LocationResult;
   className?: string;
 }
 
 const LocationSelector = ({
   onLocationSelect,
-  initialLatitude,
-  initialLongitude,
+  initialLocation,
   className = "",
 }: LocationSelectorProps) => {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(
+    initialLocation?.address || ""
+  );
   const [searchResults, setSearchResults] = useState<LocationResult[]>([]);
   const [selectedLocation, setSelectedLocation] =
-    useState<LocationResult | null>(null);
+    useState<LocationResult | null>(initialLocation || null);
   const [showResults, setShowResults] = useState(false);
   const [searchTimeout, setSearchTimeout] = useState<number | null>(null);
 
@@ -32,16 +28,11 @@ const LocationSelector = ({
 
   // Carregar localização inicial se fornecida
   useEffect(() => {
-    if (initialLatitude && initialLongitude) {
-      setSelectedLocation({
-        latitude: initialLatitude,
-        longitude: initialLongitude,
-        address: `${initialLatitude.toFixed(6)}, ${initialLongitude.toFixed(
-          6
-        )}`,
-      });
+    if (initialLocation) {
+      setSelectedLocation(initialLocation);
+      setSearchQuery(initialLocation.address);
     }
-  }, [initialLatitude, initialLongitude]);
+  }, [initialLocation]);
 
   const handleSearch = async (query: string) => {
     if (!query.trim() || !apiKey) return;

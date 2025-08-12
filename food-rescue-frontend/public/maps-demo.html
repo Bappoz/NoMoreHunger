@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NoMoreHunger - Demonstração de Mapas</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+      }
+      .header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .header h1 {
+        color: #2d3748;
+        margin-bottom: 10px;
+        font-size: 2.5rem;
+      }
+      .header p {
+        color: #718096;
+        font-size: 1.1rem;
+        line-height: 1.6;
+      }
+      .status-card {
+        background: #f7fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+      .feature-card {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
+      .feature-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      .feature-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 12px;
+        font-size: 18px;
+      }
+      .green {
+        background: #c6f6d5;
+        color: #22543d;
+      }
+      .blue {
+        background: #bee3f8;
+        color: #2c5282;
+      }
+      .purple {
+        background: #e9d8fd;
+        color: #553c9a;
+      }
+      .demo-button {
+        display: inline-block;
+        background: #667eea;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        margin: 10px;
+        transition: background 0.2s;
+      }
+      .demo-button:hover {
+        background: #5a67d8;
+      }
+      .code {
+        background: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        border-radius: 4px;
+        padding: 2px 6px;
+        font-family: "Monaco", "Consolas", monospace;
+        font-size: 0.9em;
+        color: #4a5568;
+      }
+      .setup-section {
+        background: #f7fafc;
+        border-radius: 8px;
+        padding: 20px;
+        margin-top: 20px;
+      }
+      .step-list {
+        list-style: none;
+        padding: 0;
+      }
+      .step-list li {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 12px;
+        margin-bottom: 8px;
+        position: relative;
+        padding-left: 40px;
+      }
+      .step-list li:before {
+        content: counter(step-counter);
+        counter-increment: step-counter;
+        position: absolute;
+        left: 12px;
+        top: 12px;
+        background: #667eea;
+        color: white;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: bold;
+      }
+      .step-list {
+        counter-reset: step-counter;
+      }
+      .warning {
+        background: #fef5e7;
+        border: 1px solid #f6e05e;
+        border-radius: 6px;
+        padding: 12px;
+        margin: 10px 0;
+        color: #744210;
+      }
+      .success {
+        background: #f0fff4;
+        border: 1px solid #68d391;
+        border-radius: 6px;
+        padding: 12px;
+        margin: 10px 0;
+        color: #22543d;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🗺️ NoMoreHunger - Sistema de Mapas</h1>
+        <p>
+          Integração completa com Google Maps API para localização automática e
+          busca de ofertas de alimentos.
+          <br />
+          <strong
+            >Implementação moderna com React + TypeScript + Tailwind CSS</strong
+          >
+        </p>
+      </div>
+
+      <!-- Status da API -->
+      <div class="status-card">
+        <h3>📊 Status da Integração</h3>
+        <div id="api-status">
+          <div class="warning">
+            ⚠️ <strong>Google Maps API não configurada</strong> - Sistema
+            funcionará em modo fallback
+          </div>
+          <p>
+            Para ativar todas as funcionalidades, configure a variável de
+            ambiente <span class="code">VITE_GOOGLE_MAPS_API_KEY</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Funcionalidades -->
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-header">
+            <div class="feature-icon green">📍</div>
+            <h4>Localização Automática</h4>
+          </div>
+          <p>
+            Detecta automaticamente a localização do usuário usando o GPS do
+            navegador com fallback para inserção manual.
+          </p>
+          <ul>
+            <li>✅ Geolocalização HTML5</li>
+            <li>✅ Tratamento de erros</li>
+            <li>✅ Fallback manual</li>
+          </ul>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-header">
+            <div class="feature-icon blue">🔍</div>
+            <h4>Busca de Endereços</h4>
+          </div>
+          <p>
+            Busque qualquer endereço ou CEP usando a poderosa API de Geocoding
+            do Google Maps.
+          </p>
+          <ul>
+            <li>✅ Geocoding API</li>
+            <li>✅ Busca por texto</li>
+            <li>✅ Sugestões em tempo real</li>
+          </ul>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-header">
+            <div class="feature-icon purple">🗺️</div>
+            <h4>Mapas Interativos</h4>
+          </div>
+          <p>
+            Visualize ofertas de alimentos em mapas interativos com filtros
+            avançados e interface intuitiva.
+          </p>
+          <ul>
+            <li>✅ Vista clássica e interativa</li>
+            <li>✅ Filtros por proximidade/urgência</li>
+            <li>✅ Interface responsiva</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Demonstração -->
+      <div style="text-align: center; margin: 30px 0">
+        <h3>🚀 Demonstração ao Vivo</h3>
+        <p>Acesse os componentes implementados:</p>
+
+        <a href="/map-example.html" class="demo-button">
+          🗺️ Ver Mapa Interativo
+        </a>
+
+        <a href="/location-demo.html" class="demo-button">
+          📍 Testar Localização
+        </a>
+
+        <a href="/search-demo.html" class="demo-button">
+          🔍 Buscar Endereços
+        </a>
+      </div>
+
+      <!-- Configuração -->
+      <div class="setup-section">
+        <h3>⚙️ Como Configurar a Integração</h3>
+
+        <div class="warning">
+          <strong>⚠️ Importante:</strong> Para usar todas as funcionalidades,
+          você precisa de uma chave da API do Google Maps.
+        </div>
+
+        <ol class="step-list">
+          <li>
+            Acesse o
+            <a href="https://console.cloud.google.com/" target="_blank"
+              >Google Cloud Console</a
+            >
+          </li>
+          <li>Crie um projeto ou selecione um existente</li>
+          <li>
+            Ative as APIs necessárias:
+            <ul style="margin-top: 8px">
+              <li>Maps JavaScript API</li>
+              <li>Geocoding API</li>
+              <li>Places API (opcional)</li>
+            </ul>
+          </li>
+          <li>Crie uma chave de API em "Credentials"</li>
+          <li>Configure restrições de segurança (HTTP referrers)</li>
+          <li>
+            Adicione a chave no arquivo <span class="code">.env</span>:
+            <br /><span class="code"
+              >VITE_GOOGLE_MAPS_API_KEY=sua_chave_aqui</span
+            >
+          </li>
+          <li>Reinicie o servidor de desenvolvimento</li>
+        </ol>
+
+        <div class="success">
+          <strong>✅ Modo Fallback:</strong> O sistema funciona mesmo sem a API
+          key, oferecendo funcionalidades básicas de geolocalização e interface
+          simulada.
+        </div>
+      </div>
+
+      <!-- Arquitetura -->
+      <div class="setup-section">
+        <h3>🏗️ Arquitetura dos Componentes</h3>
+
+        <div
+          style="
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+          "
+        >
+          <h4>📁 Estrutura de Arquivos</h4>
+          <pre
+            style="
+              background: #f8f9fa;
+              padding: 15px;
+              border-radius: 6px;
+              overflow-x: auto;
+              font-size: 14px;
+              line-height: 1.4;
+            "
+          >
+src/
+├── hooks/
+│   └── useGoogleMaps.ts          # Hook principal para Google Maps
+├── components/
+│   ├── LocationSelector.tsx      # Seletor de localização
+│   ├── MapView.tsx              # Vista clássica do mapa
+│   └── InteractiveMap.tsx       # Mapa interativo avançado
+├── pages/
+│   └── MapPage.tsx              # Página principal do mapa
+├── types/
+│   └── index.ts                 # Tipos TypeScript
+└── examples/
+    └── MapExample.tsx           # Exemplo de uso
+                </pre
+          >
+        </div>
+
+        <div
+          style="
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            margin-top: 15px;
+          "
+        >
+          <h4>🔧 Tecnologias Utilizadas</h4>
+          <div
+            style="
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+              gap: 15px;
+              margin-top: 10px;
+            "
+          >
+            <div>
+              <strong>Frontend:</strong>
+              <ul style="margin-top: 5px">
+                <li>React 18</li>
+                <li>TypeScript</li>
+                <li>Tailwind CSS</li>
+                <li>Vite</li>
+              </ul>
+            </div>
+            <div>
+              <strong>APIs:</strong>
+              <ul style="margin-top: 5px">
+                <li>Google Maps JavaScript API</li>
+                <li>Geocoding API</li>
+                <li>Geolocation API</li>
+              </ul>
+            </div>
+            <div>
+              <strong>Ferramentas:</strong>
+              <ul style="margin-top: 5px">
+                <li>ESLint</li>
+                <li>Prettier</li>
+                <li>Lucide Icons</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div
+        style="
+          text-align: center;
+          margin-top: 40px;
+          padding-top: 20px;
+          border-top: 1px solid #e2e8f0;
+          color: #718096;
+        "
+      >
+        <p>
+          🌟 <strong>NoMoreHunger</strong> - Combatendo o desperdício de
+          alimentos com tecnologia
+          <br />
+          Desenvolvido com ❤️ usando as melhores práticas de desenvolvimento web
+          moderno
+        </p>
+      </div>
+    </div>
+
+    <script>
+      // Verificar se a API key está configurada
+      function checkApiKey() {
+        // Em uma aplicação real, isso seria verificado no frontend
+        const hasApiKey = false; // Placeholder
+        const statusElement = document.getElementById("api-status");
+
+        if (hasApiKey) {
+          statusElement.innerHTML = `
+                    <div class="success">
+                        ✅ <strong>Google Maps API configurada corretamente</strong> - Todas as funcionalidades disponíveis
+                    </div>
+                `;
+        }
+      }
+
+      checkApiKey();
+    </script>
+  </body>
+</html>

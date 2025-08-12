@@ -14,10 +14,6 @@ const CreateOfferForm = ({ onOfferCreated }: CreateOfferFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [useLocationSelector, setUseLocationSelector] = useState(true);
-  const [manualCoordinates, setManualCoordinates] = useState({
-    latitude: 0,
-    longitude: 0,
-  });
 
   const {
     register,
@@ -38,10 +34,6 @@ const CreateOfferForm = ({ onOfferCreated }: CreateOfferFormProps) => {
   }) => {
     setValue("latitude", location.latitude);
     setValue("longitude", location.longitude);
-    setManualCoordinates({
-      latitude: location.latitude,
-      longitude: location.longitude,
-    });
   };
 
   const handleModeToggle = (manual: boolean) => {
@@ -276,8 +268,11 @@ const CreateOfferForm = ({ onOfferCreated }: CreateOfferFormProps) => {
               {useLocationSelector ? (
                 <LocationSelector
                   onLocationSelect={handleLocationSelect}
-                  initialLatitude={watchedLatitude}
-                  initialLongitude={watchedLongitude}
+                  initialLocation={{
+                    latitude: watchedLatitude,
+                    longitude: watchedLongitude,
+                    address: "",
+                  }}
                 />
               ) : (
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
